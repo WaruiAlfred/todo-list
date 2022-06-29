@@ -16,16 +16,26 @@ const Todos = () => {
   };
 
   return (
-    <Box width={"100%"} height={"100%"} flexGrow={1} marginTop="20px">
+    <Box width={"100%"} height={"100%"} flexGrow={1}>
       <Container maxWidth="lg">
-        <Typography variant="h2">TODOS</Typography>
-        <IconButton
-          aria-label="refresh"
-          color="primary"
-          onClick={handleRefresh}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            margin: "10px auto",
+            width: "40rem",
+          }}
         >
-          <RefreshIcon />
-        </IconButton>
+          <Typography variant="h2">TODOS</Typography>
+          <IconButton
+            aria-label="refresh"
+            color="error"
+            onClick={handleRefresh}
+          >
+            Refresh
+            <RefreshIcon />
+          </IconButton>
+        </Box>
         <NewTodo
           todo={todo}
           edit={edit}
