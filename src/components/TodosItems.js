@@ -1,4 +1,4 @@
-import { Box, Card, IconButton } from "@mui/material";
+import { Box, Card, IconButton, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -7,6 +7,7 @@ import { db } from "../firebase";
 
 const TodosItems = (props) => {
   const [todosData, setTodosData] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     onValue(ref(db), (snapshot) => {
@@ -34,9 +35,26 @@ const TodosItems = (props) => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        borderRadius: "10px",
+        marginTop: "20px",
+        background: theme.palette.secondary.light,
+        padding: "10px",
+      }}
+      maxWidth="md"
+    >
       {todosData.map((todo) => (
-        <Card key={todo.id}>
+        <Card
+          key={todo.id}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "10px",
+            margin: "15px 0",
+          }}
+        >
           {todo.todo}
           <Box>
             <IconButton
