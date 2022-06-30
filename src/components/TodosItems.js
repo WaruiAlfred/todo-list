@@ -2,11 +2,11 @@ import { Box, Card, IconButton, useTheme } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import UpdateIcon from "@mui/icons-material/Update";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, update } from "firebase/database";
 import { db } from "../firebase";
 import AppContext from "../context/store";
 
-const TodosItems = (props) => {
+const TodosItems = () => {
   const [todosData, setTodosData] = useState([]);
   const theme = useTheme();
   const { onUpdateTodo } = useContext(AppContext);
@@ -24,6 +24,14 @@ const TodosItems = (props) => {
   }, []);
 
   const handleCompleteTodo = (todo) => {
+    //Update database
+    update(ref(db, `/${todo.id}`), {
+      id: todo.id,
+      complete: true,
+      todo: todo.todo,
+    });
+
+    //Update View
     setTodosData((previousTodos) =>
       previousTodos.filter((todoData) => todoData.id !== todo.id)
     );
@@ -49,21 +57,22 @@ const TodosItems = (props) => {
             justifyContent: "space-between",
             padding: "10px",
             margin: "15px 0",
+            color: `${todo.complete ? "green" : ""}`,
           }}
         >
           {todo.todo}
           <Box>
             <IconButton
               aria-label="update"
-              color="primary"
               onClick={() => onUpdateTodo(todo)}
+              sx={{ color: `${todo.complete ? "green" : "primary"}` }}
             >
               <UpdateIcon />
             </IconButton>
             <IconButton
               aria-label="done"
-              color="primary"
               onClick={() => handleCompleteTodo(todo)}
+              sx={{ color: `${todo.complete ? "green" : "primary"}` }}
             >
               <DoneIcon />
             </IconButton>

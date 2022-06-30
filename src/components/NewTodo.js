@@ -24,8 +24,9 @@ const NewTodo = () => {
   const handleAddTodoToDb = (data) => {
     const uuid = uid();
     set(ref(db, `/${uuid}`), {
-      todo: data?.todo,
       id: uuid,
+      complete: false,
+      todo: data?.todo,
     });
 
     onClearTodo();
@@ -33,8 +34,9 @@ const NewTodo = () => {
 
   const handleUpdateTodo = (data) => {
     update(ref(db, `/${todoUpdateId}`), {
-      todo: data?.todo,
       id: todoUpdateId,
+      complete: false,
+      todo: data?.todo,
     });
 
     onClearTodo();
