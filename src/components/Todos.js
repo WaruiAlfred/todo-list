@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Box, Container, Typography, IconButton } from "@mui/material";
 import NewTodo from "./NewTodo";
 import TodosItems from "./TodosItems";
@@ -7,10 +6,6 @@ import { db } from "../firebase";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 const Todos = () => {
-  const [edit, setEdit] = useState(false);
-  const [todoUpdateId, setTodoUpdateId] = useState("");
-  const [todo, setTodo] = useState("");
-
   const handleRefresh = () => {
     remove(ref(db, "/"));
   };
@@ -36,18 +31,8 @@ const Todos = () => {
             <RefreshIcon />
           </IconButton>
         </Box>
-        <NewTodo
-          todo={todo}
-          edit={edit}
-          todoUpdateId={todoUpdateId}
-          handleEdit={setEdit}
-          handleSetTodo={setTodo}
-        />
-        <TodosItems
-          handleSetTodoUpdateId={setTodoUpdateId}
-          handleEdit={setEdit}
-          handleSetTodo={setTodo}
-        />
+        <NewTodo />
+        <TodosItems />
       </Container>
     </Box>
   );

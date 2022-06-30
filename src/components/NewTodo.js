@@ -3,13 +3,23 @@ import { useForm } from "react-hook-form";
 import { db } from "../firebase";
 import { ref, set, update } from "firebase/database";
 import { uid } from "uid";
+import { useContext } from "react";
+import AppContext from "../context/store";
 
-const NewTodo = (props) => {
+const NewTodo = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const {
+    edit,
+    todo,
+    todoUpdateId,
+    onAddTodoOnChange,
+    onClearTodo,
+    onUndoEditTodo,
+  } = useContext(AppContext);
 
   const handleAddTodoToDb = (data) => {
     const uuid = uid();
@@ -18,26 +28,24 @@ const NewTodo = (props) => {
       id: uuid,
     });
 
-    props.handleSetTodo("");
+    onClearTodo();
   };
 
   const handleUpdateTodo = (data) => {
-    update(ref(db, `/${props.todoUpdateId}`), {
+    update(ref(db, `/${todoUpdateId}`), {
       todo: data?.todo,
-      id: props.todoUpdateId,
+      id: todoUpdateId,
     });
 
-    props.handleSetTodo("");
-    props.handleEdit(false);
+    onClearTodo();
+    onUndoEditTodo();
   };
 
   return (
     <Box width={"100%"}>
       <Container maxWidth="md">
         <form
-          onSubmit={handleSubmit(
-            props.edit ? handleUpdateTodo : handleAddTodoToDb
-          )}
+          onSubmit={handleSubmit(edit ? handleUpdateTodo : handleAddTodoToDb)}
         >
           <Box display={"flex"}>
             <TextField
@@ -45,8 +53,8 @@ const NewTodo = (props) => {
               label="Todo"
               name="todo"
               {...register("todo", { required: "Required" })}
-              value={props.todo}
-              onChange={(e) => props.handleSetTodo(e.target.value)}
+              value={todo}
+              onChange={(e) => onAddTodoOnChange(e.target.value)}
               error={!!errors?.todo}
               helperText={errors?.todo ? errors.todo.message : null}
               sx={{ width: "30rem" }}
@@ -56,7 +64,7 @@ const NewTodo = (props) => {
               variant="contained"
               sx={{ marginLeft: "10px", height: "54px" }}
             >
-              {props.edit ? "Edit" : "Add"} Todo
+              {edit ? "Edit" : "Add"} Todo
             </Button>
           </Box>
         </form>

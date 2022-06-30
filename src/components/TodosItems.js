@@ -1,13 +1,15 @@
 import { Box, Card, IconButton, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import UpdateIcon from "@mui/icons-material/Update";
 import { onValue, ref } from "firebase/database";
 import { db } from "../firebase";
+import AppContext from "../context/store";
 
 const TodosItems = (props) => {
   const [todosData, setTodosData] = useState([]);
   const theme = useTheme();
+  const { onUpdateTodo } = useContext(AppContext);
 
   useEffect(() => {
     onValue(ref(db), (snapshot) => {
@@ -26,12 +28,6 @@ const TodosItems = (props) => {
       previousTodos.filter((todoData) => todoData.id !== todo.id)
     );
     setTodosData((previousTodos) => [...previousTodos, todo]);
-  };
-
-  const handleUpdateTodo = (todo) => {
-    props.handleEdit(true);
-    props.handleSetTodoUpdateId(todo.id);
-    props.handleSetTodo(todo.todo);
   };
 
   return (
@@ -60,7 +56,7 @@ const TodosItems = (props) => {
             <IconButton
               aria-label="update"
               color="primary"
-              onClick={() => handleUpdateTodo(todo)}
+              onClick={() => onUpdateTodo(todo)}
             >
               <UpdateIcon />
             </IconButton>
